@@ -12,7 +12,7 @@ def load_urls4check(path):
 
 def is_server_respond_with_ok(url):
     try:
-        response = requests.head(url, timeout=1)
+        response = requests.head(url, allow_redirects=True, timeout=1)
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
         return False
     return response.ok
@@ -31,18 +31,18 @@ def is_expire_in(interval, exp_date):
 
 if __name__ == '__main__':
     try:
-        urls = load_urls4check(sys.argv[1])
+        urls = set(load_urls4check(sys.argv[1]))
     except IndexError:
         exit('Please specify path to URL list')
     except FileNotFoundError:
         exit('File not found')
     interval = 30
+    urls_ok = {url for url in urls if is_server_respond_with_ok(url)}
     print('Alive Expire  URL')
-    for url in urls:
-        if is_server_respond_with_ok(url):
-            print('{1!s:6} {0!s:6} {2}'.format(
-                is_expire_in(interval, get_domain_expiration_date(url)),
-                True, url)
-            )
-        else:
-            print('Failed to establish connection to {}'.format(url))
+    for url in urls_ok:
+        print('{1!s:6} {0!s:6} {2}'.format(
+            is_expire_in(interval, get_domain_expiration_date(url)),
+            True, url)
+        )
+    for url in (urls - urls_ok):
+        print('Failed to establish connection to {}'.format(url))
