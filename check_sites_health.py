@@ -13,18 +13,23 @@ def load_urls4check(path):
 def is_server_respond_with_ok(url):
     try:
         response = requests.head(url, allow_redirects=True, timeout=1)
-    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+    except requests.RequestException:
         return False
     return response.ok
 
 
 def get_domain_expiration_date(url):
     domain = urllib.parse.urlsplit(url).hostname
-    exp_date = whois.whois(domain).expiration_date
+    try:
+        exp_date = whois.whois(domain).expiration_date
+    except whois.parser.PywhoisError:
+        return None
     return exp_date[0] if type(exp_date) is list else exp_date
 
 
 def is_expire_in(interval, exp_date):
+    if not exp_date:
+        return 'N/A'
     return exp_date.date() < (
         datetime.date.today() + datetime.timedelta(days=interval)
         )
@@ -37,12 +42,10 @@ if __name__ == '__main__':
     except FileNotFoundError:
         exit('File not found')
     interval = 30
-    urls_ok = {url for url in urls if is_server_respond_with_ok(url)}
     print('Alive Expire  URL')
-    for url in urls_ok:
+    for url in urls:
         print('{1!s:6} {0!s:6} {2}'.format(
             is_expire_in(interval, get_domain_expiration_date(url)),
-            True, url)
+            is_server_respond_with_ok(url),
+            url)
         )
-    for url in (urls - urls_ok):
-        print('Failed to establish connection to {}'.format(url))
