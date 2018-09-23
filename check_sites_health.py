@@ -36,9 +36,8 @@ def is_expire_in(interval, exp_date):
 
 
 def print_status(url, is_alive, is_expire):
-    for value, status in {'True': 'Yes', 'False': 'No', 'None': 'N/A'}.items():
-        is_alive = str(is_alive).replace(value, status)
-        is_expire = str(is_expire).replace(value, status)
+    is_alive = 'Yes' if is_alive else 'No'
+    is_expire = 'N/A' if is_expire is None else 'Yes' if is_expire else 'No'
     print('{0:6} {1:6} {2}'.format(is_alive, is_expire, url))
 
 
