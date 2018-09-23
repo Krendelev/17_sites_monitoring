@@ -21,7 +21,7 @@ $ python check_sites_health.py urls.txt
 Alive Expire  URL
 True   False  https://www.python.org
 True   False  https://devman.org
-True   False  https://github.com
+False  False  http://melevir.com
 False  N/A    https://xgithubx.com
 ```
 
