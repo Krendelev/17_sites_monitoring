@@ -22,6 +22,7 @@ Alive Expire  URL
 True   False  https://www.python.org
 True   False  https://devman.org
 True   False  https://github.com
+False  N/A    https://xgithubx.com
 ```
 
 ## Project Goals
