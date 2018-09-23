@@ -19,10 +19,10 @@ Pass `text` file with URLs as argument.
 ```bash
 $ python check_sites_health.py urls.txt
 Alive Expire  URL
-True   False  https://www.python.org
-True   False  https://devman.org
-False  False  http://melevir.com
-False  N/A    https://xgithubx.com
+ Yes     No   https://www.python.org
+ Yes     No   https://devman.org
+  No     No   http://melevir.com
+  No    N/A   https://xgithubx.com
 ```
 
 ## Project Goals
